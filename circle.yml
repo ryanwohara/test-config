@@ -3,10 +3,9 @@ experimental:
     version: 0.1
     executorType: docker
     containerInfo:
-      - image: rohara/yarn@sha256:15cb972d71ae5047123dc835465c1a7d6a83400921794406a2cd32d47c67a1ab
+      - image: rohara/yarn@sha256:f1da6e0dedc3b33538d098b3b535bb46dba480e1e3bf91b9e396a43623313072
     stages:
       build:
-        parallel: 8
         workDir: /root/workspace
         steps:
           - type: checkout
