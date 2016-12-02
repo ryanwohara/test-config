@@ -1,0 +1,29 @@
+experimental:
+  picard:
+    version: 0.1
+    executorType: docker
+    containerInfo:
+      - image: rohara/yarn@sha256:15cb972d71ae5047123dc835465c1a7d6a83400921794406a2cd32d47c67a1ab
+    stages:
+      build:
+        parallel: 8
+        workDir: /root/r101-frontend
+        steps:
+          - type: checkout
+          - type: shell
+            command: |
+              whoami
+              pwd
+          - type: shell
+            command: echo "127.0.0.1 www.remind.dev" >> /etc/hosts
+          - type: cache-restore
+            key: r101-frontend-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          - type: shell
+            command: yarn install --ignore-optional --pure-lockfile
+          - type: shell
+            command: ./bin/circle.sh
+          - type: cache-save
+            key: r101-frontend-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            paths:
+              - ~/.yarn-cache
+
