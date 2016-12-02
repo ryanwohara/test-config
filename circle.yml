@@ -7,23 +7,20 @@ experimental:
     stages:
       build:
         parallel: 8
-        workDir: /root/r101-frontend
+        workDir: /root/workspace
         steps:
           - type: checkout
+          - type: cache-restore
+            key: tmp-config-{{ .Branch }}-{{ checksum "yarn.lock" }}
           - type: shell
             command: |
               whoami
               pwd
-          - type: shell
-            command: echo "127.0.0.1 www.remind.dev" >> /etc/hosts
-          - type: cache-restore
-            key: r101-frontend-{{ .Branch }}-{{ checksum "yarn.lock" }}
+              ls -la /root/.yarn/bin/
           - type: shell
             command: yarn install --ignore-optional --pure-lockfile
-          - type: shell
-            command: ./bin/circle.sh
           - type: cache-save
-            key: r101-frontend-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            key: tmp-config-{{ .Branch }}-{{ checksum "yarn.lock" }}
             paths:
               - ~/.yarn-cache
 
